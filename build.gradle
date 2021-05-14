@@ -1,0 +1,38 @@
+plugins {
+    id 'java'
+    id 'checkstyle'
+}
+
+group 'org.openbrewerydb'
+version '1.0-SNAPSHOT'
+
+checkstyle {
+    toolVersion "7.6.1"
+}
+
+checkstyleMain {
+    source ='src/main/java'
+}
+checkstyleTest {
+    source ='src/test/java'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    // logging
+    implementation 'ch.qos.logback:logback-classic:1.2.3'
+
+    // api
+    implementation 'io.javalin:javalin-bundle:3.12.0'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+}
+
+test {
+    useJUnitPlatform()
+}
