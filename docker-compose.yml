@@ -4,32 +4,37 @@ services:
     image: openbrewerydb:$TAG
     container_name: openbrewerydb
     environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: openbrewerydb
+      DB_USER: "admin"
+      DB_PASSWORD: "admin"
       PORT: 10000
     ports:
       - "10000:10000"
-#  db:
-#    restart: "no"
-#    image: 'postgres:12-alpine'
-#    container_name: db
-#    environment:
-#      POSTGRES_USER: "admin"
-#      POSTGRES_PASSWORD: "admin"
-#      POSTGRES_DB: employee-tracker
-#    volumes:
-#      - postgres:/var/lib/postgresql/data
-#    ports:
-#      - "5432:5432"
-#  pgadmin:
-#    image: dpage/pgadmin4:latest
-#    container_name: pgadmin
-#    volumes:
-#      - pgadmin:/root/.pgadmin
-#    environment:
-#      PGADMIN_DEFAULT_EMAIL: fake@email.com
-#      PGADMIN_DEFAULT_PASSWORD: pw
-#    ports:
-#      - "5050:80"
-#    restart: "no"
-#volumes:
-#  postgres:
-#  pgadmin:
+  db:
+    restart: "no"
+    image: 'postgis/postgis:12-2.5-alpine'
+    container_name: db
+    environment:
+      POSTGRES_USER: "admin"
+      POSTGRES_PASSWORD: "admin"
+      POSTGRES_DB: openbrewerydb
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    volumes:
+      - pgadmin:/root/.pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: fake@email.com
+      PGADMIN_DEFAULT_PASSWORD: pw
+    ports:
+      - "5050:80"
+    restart: "no"
+volumes:
+  postgres:
+  pgadmin:

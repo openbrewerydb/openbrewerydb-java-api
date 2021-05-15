@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'com.github.johnrengelman.shadow' version '7.0.0'
+    id "org.flywaydb.flyway" version "7.9.0"
     id 'checkstyle'
 }
 
@@ -29,6 +30,11 @@ dependencies {
 
     // logging
     implementation 'ch.qos.logback:logback-classic:1.2.3'
+
+    // db
+    implementation 'org.postgresql:postgresql:42.2.16'
+    implementation 'org.jdbi:jdbi3-core:3.14.4'
+    implementation 'org.flywaydb:flyway-core:7.9.0'
 
     // api
     implementation 'io.javalin:javalin-bundle:3.13.6'
