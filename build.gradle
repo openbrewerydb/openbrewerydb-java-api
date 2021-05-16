@@ -31,13 +31,20 @@ dependencies {
     // logging
     implementation 'ch.qos.logback:logback-classic:1.2.3'
 
+    // json
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.12.3'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.3'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.12.3'
+
     // db
     implementation 'org.postgresql:postgresql:42.2.16'
     implementation 'org.jdbi:jdbi3-core:3.14.4'
     implementation 'org.flywaydb:flyway-core:7.9.0'
+    implementation 'net.postgis:postgis-jdbc:2.5.0'
 
     // api
     implementation 'io.javalin:javalin-bundle:3.13.6'
+    implementation 'com.konghq:unirest-java:3.4.00'
 
     // testing
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
