@@ -18,7 +18,7 @@ public class AppServer {
    */
   public void run(final int port) {
     final Javalin app = Javalin.create()
-      .start(port);
+        .start(port);
 
     logger.info("Application started and is listening on port " + port);
   }
