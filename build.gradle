@@ -9,7 +9,7 @@ group 'org.openbrewerydb'
 version '1.0-SNAPSHOT'
 
 checkstyle {
-    toolVersion "7.6.1"
+    toolVersion "8.42"
 }
 
 checkstyleMain {
@@ -39,8 +39,13 @@ dependencies {
     // api
     implementation 'io.javalin:javalin-bundle:3.13.6'
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+    // testing
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
+    testImplementation 'org.assertj:assertj-core:3.19.0'
+    testImplementation 'org.testcontainers:testcontainers:1.15.1'
+    testImplementation 'org.testcontainers:junit-jupiter:1.15.1'
+    testImplementation 'org.testcontainers:postgresql:1.15.1'
 }
 
 test {
