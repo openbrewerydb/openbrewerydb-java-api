@@ -1,17 +1,23 @@
-package org.openbrewerydb.dal;
+package org.openbrewerydb.api;
 
-import static org.openbrewerydb.TestUtils.FAKE_CLOCK;
-import static org.openbrewerydb.TestUtils.TEST_BREWERY;
 import static org.openbrewerydb.TestUtils.createTestBrewery;
 
+import io.javalin.plugin.json.JavalinJson;
+import java.time.Clock;
+import kong.unirest.HttpResponse;
+import kong.unirest.Unirest;
 import org.assertj.core.api.WithAssertions;
 import org.jdbi.v3.core.Jdbi;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.openbrewerydb.AppServer;
 import org.openbrewerydb.config.DbConfig;
-import org.openbrewerydb.models.internal.BreweryInternal;
+import org.openbrewerydb.dal.BreweryDao;
+import org.openbrewerydb.dal.BreweryDaoImpl;
+import org.openbrewerydb.models.Brewery;
+import org.openbrewerydb.service.BreweryService;
 import org.openbrewerydb.utils.DatabaseUtils;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -20,7 +26,7 @@ import org.testcontainers.utility.DockerImageName;
 
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class BreweryDaoImplTest implements WithAssertions {
+class BreweryApiTest implements WithAssertions {
 
   @Container
   public static PostgreSQLContainer<?> postgresDb = new PostgreSQLContainer<>(
@@ -32,7 +38,11 @@ class BreweryDaoImplTest implements WithAssertions {
       .withUsername("admin")
       .withPassword("admin");
 
+  final int port = 9990;
   BreweryDao breweryDao;
+  BreweryService breweryService;
+  BreweryApi breweryApi;
+  private final String apiUrl = String.format("http://localhost:%s/breweries", port);
 
   @BeforeAll
   public void beforeAll() {
@@ -47,7 +57,11 @@ class BreweryDaoImplTest implements WithAssertions {
 
     DatabaseUtils.performMigrations(dbConfig);
     final Jdbi jdbi = Jdbi.create(dbConfig.toUrl());
-    this.breweryDao = new BreweryDaoImpl(jdbi, FAKE_CLOCK);
+    this.breweryDao = new BreweryDaoImpl(jdbi, Clock.systemDefaultZone());
+    this.breweryService = new BreweryService(this.breweryDao);
+    this.breweryApi = new BreweryApi(this.breweryService);
+
+    new AppServer(this.breweryApi).run(port);
   }
 
   @BeforeEach
@@ -56,19 +70,13 @@ class BreweryDaoImplTest implements WithAssertions {
   }
 
   @Test
-  public void   testCreateBrewery() {
-    final BreweryInternal actual = createTestBrewery(this.breweryDao);
-    assertThat(actual.name()).isEqualTo(TEST_BREWERY.name());
-    assertThat(actual.breweryType()).isEqualTo(TEST_BREWERY.breweryType());
-    assertThat(actual.city()).isEqualTo(TEST_BREWERY.city());
-    assertThat(actual.state()).isEqualTo(TEST_BREWERY.state());
-    assertThat(actual.country()).isEqualTo(TEST_BREWERY.country());
-    assertThat(actual.location()).isEqualTo(TEST_BREWERY.location());
+  public void testGetBrewery() {
+    Brewery expected = createTestBrewery(this.breweryDao).toPublic();
+    HttpResponse<String> response = Unirest.get(String.format("%s/%s", this.apiUrl, expected.id()))
+        .asString();
+    assertThat(response.getStatus()).isEqualTo(200);
+    Brewery actual = JavalinJson.fromJson(response.getBody(), Brewery.class);
+    assertThat(actual).isEqualTo(expected);
   }
 
-  @Test
-  public void testGetBrewery() {
-    BreweryInternal brewery = createTestBrewery(this.breweryDao);
-    assertThat(this.breweryDao.getBrewery(brewery.id()).get()).isEqualTo(brewery);
-  }
 }

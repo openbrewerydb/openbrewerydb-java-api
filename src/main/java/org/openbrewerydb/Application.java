@@ -1,6 +1,12 @@
 package org.openbrewerydb;
 
+import java.time.Clock;
+import org.jdbi.v3.core.Jdbi;
+import org.openbrewerydb.api.BreweryApi;
 import org.openbrewerydb.config.DbConfig;
+import org.openbrewerydb.dal.BreweryDao;
+import org.openbrewerydb.dal.BreweryDaoImpl;
+import org.openbrewerydb.service.BreweryService;
 import org.openbrewerydb.utils.DatabaseUtils;
 
 /**
@@ -25,7 +31,12 @@ public class Application {
     final DbConfig dbConfig = new DbConfig(dbHost, dbPort, dbSchema, dbName, dbUserName, dbPassword);
     DatabaseUtils.performMigrations(dbConfig);
 
-    final AppServer appServer = new AppServer();
+    final Jdbi jdbi = Jdbi.create(dbConfig.toUrl());
+    final BreweryDao breweryDao = new BreweryDaoImpl(jdbi, Clock.systemDefaultZone());
+    final BreweryService breweryService = new BreweryService(breweryDao);
+    final BreweryApi breweryApi = new BreweryApi(breweryService);
+
+    final AppServer appServer = new AppServer(breweryApi);
     appServer.run(10000);
   }
 }
