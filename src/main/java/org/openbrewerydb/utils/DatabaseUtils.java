@@ -20,14 +20,14 @@ public class DatabaseUtils {
   public static void performMigrations(final DbConfig dbConfig) {
     final String url = String.format(
         "jdbc:postgresql://%s:%s/%s",
-        dbConfig.host(),
-        dbConfig.port(),
-        dbConfig.databaseName()
+        dbConfig.getHost(),
+        dbConfig.getPort(),
+        dbConfig.getDatabaseName()
     );
 
     logger.info(url);
     final Flyway flyway = Flyway.configure()
-        .dataSource(url, dbConfig.userName(), dbConfig.password())
+        .dataSource(url, dbConfig.getUserName(), dbConfig.getPassword())
         .load();
     flyway.migrate();
   }
