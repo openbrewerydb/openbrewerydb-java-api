@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 set -e
 set -o pipefail
 
@@ -10,4 +12,4 @@ docker build . -t "openbrewerydb:$tag"
 export TAG=$tag
 
 # Deploy to docker-compose
-docker-compose up -d
+docker-compose up
