@@ -89,21 +89,13 @@ artifacts {
     shadowJar
 }
 
-task runDependencyCheck{
-    doLast{
-        println "Dependency Check Report Link : " + project.buildDir + "/build/reports/dependency-check-report.html"
-    }
-}
-
 // dependencyCheck settings
 dependencyCheck {
     formats=['JSON', 'HTML']
     suppressionFile='dependency-suppressions.xml'
+    failBuildOnCVSS = 7
 }
-
-project.tasks["runDependencyCheck"].dependsOn "dependencyCheck"
 
 task stage(dependsOn: ['build', 'clean'])
 build.dependsOn(shadowJar)
-check.dependsOn dependencyCheckAnalyze
 build.mustRunAfter clean

@@ -29,3 +29,10 @@ The run script will build the app, dockerize it, and deploy to docker compose au
 * `docker logs -f openbrewerydb` - Shows the server logs.
 * `docker-compose stop` - Stops all containers
 * `docker-compose up` - Starts all containers, or restarts if there were changes.
+
+## Running Dependency Analysis
+We can run a dependency check analysis that will show us vulnerabilities. This command will start the analysis:
+
+`./gradlew dependencyCheckAnalysis`
+
+This will output an HTML and JSON file in the `/build/reports/` directory.
