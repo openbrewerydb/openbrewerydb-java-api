@@ -23,7 +23,13 @@ The run script will build the app, dockerize it, and deploy to docker compose au
 * Dockerize it with `docker build .`.
 * Substitute the tag in the `docker.compose.yml` file and run `docker-compose up -d` to deploy it locally.
 
-## Useful Docker Commands
+## Useful Commands
+
+### Testing
+
+`./gradlew test`
+
+### Docker
 
 * `docker-compose ps` - Shows which docker containers are running.
 * `docker logs -f openbrewerydb` - Shows the server logs.
