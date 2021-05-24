@@ -12,4 +12,4 @@ docker build . -t "openbrewerydb:$tag"
 export TAG=$tag
 
 # Deploy to docker-compose
-docker-compose up
+docker-compose up -d

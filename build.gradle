@@ -92,7 +92,7 @@ artifacts {
 // dependencyCheck settings
 dependencyCheck {
     formats=['JSON', 'HTML']
-    suppressionFile='dependency-suppressions.xml'
+    suppressionFile='./config/dependency-suppressions.xml'
     failBuildOnCVSS = 7
 }
 
