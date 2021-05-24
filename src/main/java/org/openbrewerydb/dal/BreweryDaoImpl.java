@@ -3,11 +3,13 @@ package org.openbrewerydb.dal;
 import static org.openbrewerydb.dal.BreweryDbTemplate.CREATE_BREWERY;
 import static org.openbrewerydb.dal.BreweryDbTemplate.DELETE_ALL_BREWERIES;
 import static org.openbrewerydb.dal.BreweryDbTemplate.GET_BREWERY;
+import static org.openbrewerydb.dal.BreweryDbTemplate.GET_NEAREST_BREWERIES;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Clock;
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.mapper.RowMapper;
@@ -64,6 +66,16 @@ public class BreweryDaoImpl implements BreweryDao {
         .bind("id", id)
         .map(BreweryMapper.INSTANCE)
         .findFirst());
+  }
+
+  @Override
+  public List<BreweryInternal> getNearestBreweries(Location location, int radiusMeters) {
+    return jdbi.withHandle(handle -> handle.createQuery(GET_NEAREST_BREWERIES)
+        .bind("latitude", location.latitude())
+        .bind("longitude", location.longitude())
+        .bind("radiusMeters", radiusMeters)
+        .map(BreweryMapper.INSTANCE)
+        .list());
   }
 
   @Override

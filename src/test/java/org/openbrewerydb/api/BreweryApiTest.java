@@ -4,6 +4,7 @@ import static org.openbrewerydb.TestUtils.createTestBrewery;
 
 import io.javalin.plugin.json.JavalinJson;
 import java.time.Clock;
+import java.util.List;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
 import org.assertj.core.api.WithAssertions;
@@ -17,6 +18,8 @@ import org.openbrewerydb.config.DbConfig;
 import org.openbrewerydb.dal.BreweryDao;
 import org.openbrewerydb.dal.BreweryDaoImpl;
 import org.openbrewerydb.models.Brewery;
+import org.openbrewerydb.models.GetNearestBreweriesResponse;
+import org.openbrewerydb.models.internal.BreweryInternal;
 import org.openbrewerydb.service.BreweryService;
 import org.openbrewerydb.utils.DatabaseUtils;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -77,6 +80,45 @@ class BreweryApiTest implements WithAssertions {
     assertThat(response.getStatus()).isEqualTo(200);
     Brewery actual = JavalinJson.fromJson(response.getBody(), Brewery.class);
     assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  public void testGetNearestBreweries() {
+    final BreweryInternal brewery = createTestBrewery(this.breweryDao);
+    String url = String.format("%s/search-nearest?latitude=%s&longitude=%s&radius=%s",
+        this.apiUrl,
+        brewery.location().latitude(),
+        brewery.location().longitude(),
+        1);
+    HttpResponse<String> response = Unirest.get(url)
+        .asString();
+
+    assertThat(response.getStatus()).isEqualTo(200);
+    List<Brewery> breweries = JavalinJson.fromJson(response.getBody(), GetNearestBreweriesResponse.class).breweries();
+    assertThat(breweries.size()).isEqualTo(1);
+
+    // not in radius
+    url = String.format("%s/search-nearest?latitude=%s&longitude=%s&radius=%s", this.apiUrl, 1.0, 1.0, 1);
+    response = Unirest.get(url)
+        .asString();
+
+    assertThat(response.getStatus()).isEqualTo(200);
+    breweries = JavalinJson.fromJson(response.getBody(), GetNearestBreweriesResponse.class).breweries();
+    assertThat(breweries).isEmpty();
+  }
+
+  @Test
+  public void testGetNearestBreweriesBadRequest() {
+    final BreweryInternal brewery = createTestBrewery(this.breweryDao);
+    String url = String.format("%s/search-nearest?latitude=%s&longitude=%s&radius=%s",
+        this.apiUrl,
+        brewery.location().latitude(),
+        brewery.location().longitude(),
+        1.3); // not a valid integer
+    HttpResponse<String> response = Unirest.get(url)
+        .asString();
+
+    assertThat(response.getStatus()).isEqualTo(400);
   }
 
 }

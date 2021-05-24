@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.openbrewerydb.config.DbConfig;
+import org.openbrewerydb.models.Location;
 import org.openbrewerydb.models.internal.BreweryInternal;
 import org.openbrewerydb.utils.DatabaseUtils;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -68,7 +69,19 @@ class BreweryDaoImplTest implements WithAssertions {
 
   @Test
   public void testGetBrewery() {
-    BreweryInternal brewery = createTestBrewery(this.breweryDao);
+    final BreweryInternal brewery = createTestBrewery(this.breweryDao);
     assertThat(this.breweryDao.getBrewery(brewery.id()).get()).isEqualTo(brewery);
+  }
+
+  @Test
+  public void testGetNearestBreweries() {
+    final BreweryInternal brewery = createTestBrewery(this.breweryDao);
+    assertThat(this.breweryDao.getNearestBreweries(brewery.location(), 1).size()).isEqualTo(1);
+
+    // Flo's Airport Diner in Chino California, about ~45 mi away from golden road in Los Angeles
+    // https://www.yelp.com/biz/flos-airport-cafe-chino?osq=flo%27s+airport+diner
+    final Location flosDinerLoc = new Location(33.98271879114622, -117.64448929419146);
+    assertThat(this.breweryDao.getNearestBreweries(flosDinerLoc, 5)).isEmpty();
+    assertThat(this.breweryDao.getNearestBreweries(flosDinerLoc, 80468).size()).isEqualTo(1); // 50 miles
   }
 }
