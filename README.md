@@ -33,6 +33,6 @@ The run script will build the app, dockerize it, and deploy to docker compose au
 ## Running Dependency Analysis
 We can run a dependency check analysis that will show us vulnerabilities. This command will start the analysis:
 
-`./gradlew dependencyCheckAnalysis`
+`./gradlew dependencyCheckAnalyze`
 
 This will output an HTML and JSON file in the `/build/reports/` directory.
