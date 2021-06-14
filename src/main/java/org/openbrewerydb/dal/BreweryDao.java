@@ -18,10 +18,18 @@ public interface BreweryDao {
   @VisibleForTesting
   BreweryInternal createBrewery(String name,
                                 String breweryType,
+                                String street,
+                                String address2,
+                                String address3,
                                 String city,
                                 String state,
+                                String countyProvince,
                                 String country,
-                                Location location);
+                                String postalCode,
+                                String phone,
+                                String websiteUrl,
+                                Location location,
+                                String tags);
 
   /**
    * Gets a brewery from the database.

@@ -9,14 +9,23 @@ import org.openbrewerydb.models.Location;
  */
 public record BreweryInternal(
     int id,
+    String obdbId,
     String name,
     String breweryType,
+    String street,
+    String address2,
+    String address3,
     String city,
     String state,
+    String countyProvince,
     String country,
+    String postalCode,
+    String phone,
+    String websiteUrl,
     Location location,
-    Instant createdAt,
-    Instant updatedAt
+    String tags,
+    String createdAt,
+    String updatedAt
 ) {
 
   /**
@@ -24,11 +33,22 @@ public record BreweryInternal(
    */
   public Brewery toPublic() {
     return new Brewery(this.id,
+        this.obdbId,
         this.name,
         this.breweryType,
+        this.street,
+        this.address2,
+        this.address3,
         this.city,
         this.state,
+        this.countyProvince,
         this.country,
-        this.location);
+        this.postalCode,
+        this.phone,
+        this.websiteUrl,
+        this.location,
+        this.tags,
+        this.createdAt,
+        this.updatedAt);
   }
 }

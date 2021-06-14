@@ -29,6 +29,7 @@ public class DatabaseUtils {
     final Flyway flyway = Flyway.configure()
         .dataSource(url, dbConfig.getUserName(), dbConfig.getPassword())
         .load();
+    flyway.repair();
     flyway.migrate();
   }
 }

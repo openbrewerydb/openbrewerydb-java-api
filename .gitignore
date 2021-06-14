@@ -27,3 +27,6 @@ hs_err_pid*
 # Gradle
 build/
 .gradle/
+
+# Flyway
+flyway-7.10.0/
