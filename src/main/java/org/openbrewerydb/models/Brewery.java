@@ -1,8 +1,6 @@
 package org.openbrewerydb.models;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import java.time.Instant;
 
 /**
  * Public Brewery record. To be returned in the API.

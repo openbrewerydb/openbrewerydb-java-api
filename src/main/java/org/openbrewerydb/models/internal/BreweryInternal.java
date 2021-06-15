@@ -1,6 +1,5 @@
 package org.openbrewerydb.models.internal;
 
-import java.time.Instant;
 import org.openbrewerydb.models.Brewery;
 import org.openbrewerydb.models.Location;
 

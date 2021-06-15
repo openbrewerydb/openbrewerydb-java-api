@@ -57,7 +57,7 @@ class BreweryDaoImplTest implements WithAssertions {
   }
 
   @Test
-  public void   testCreateBrewery() {
+  public void testCreateBrewery() {
     final BreweryInternal actual = createTestBrewery(this.breweryDao);
     assertThat(actual.name()).isEqualTo(TEST_BREWERY.name());
     assertThat(actual.breweryType()).isEqualTo(TEST_BREWERY.breweryType());

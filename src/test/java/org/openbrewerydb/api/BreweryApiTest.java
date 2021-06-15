@@ -79,6 +79,7 @@ class BreweryApiTest implements WithAssertions {
         .asString();
     assertThat(response.getStatus()).isEqualTo(200);
     Brewery actual = JavalinJson.fromJson(response.getBody(), Brewery.class);
+    assertThat(actual.obdbId()).isEqualTo("golden-road-brewing-los-angeles");
     assertThat(actual).isEqualTo(expected);
   }
 
